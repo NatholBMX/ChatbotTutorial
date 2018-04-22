@@ -1,22 +1,36 @@
 from __future__ import print_function, unicode_literals
 import random
-import logging
 import os
-
-os.environ['NLTK_DATA'] = os.getcwd() + '/nltk_data'
-
 from textblob import TextBlob
 from config import FILTER_WORDS
 
-logging.basicConfig()
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+# for debugging the bot
+verbose=False
+
+os.environ['NLTK_DATA'] = os.getcwd() + '/nltk_data'
+
+if verbose:
+    import logging
+
+    logging.basicConfig()
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
 # start:example-hello.py
 # Sentences we'll respond with if the user greeted us
 GREETING_KEYWORDS = ("hello", "hi", "greetings", "sup", "what's up",)
 
 GREETING_RESPONSES = ["'sup bro", "hey", "*nods*", "hey you get my snap?"]
+
+def main():
+    print("Say something to brobot! (or type ""Quit"" to exit the chat)")
+    while True:
+        saying=input("You: ")
+        if saying.lower()=="quit":
+            break
+        else:
+            print("Brobot: ", broback(saying))
+    return
 
 def check_for_greeting(sentence):
     """If any of the words in the user's input was a greeting, return a greeting response"""
@@ -57,7 +71,8 @@ def starts_with_vowel(word):
 
 def broback(sentence):
     """Main program loop: select a response for the input sentence and return it"""
-    logger.info("Broback: respond to %s", sentence)
+    if verbose:
+        logger.info("Broback: respond to %s", sentence)
     resp = respond(sentence)
     return resp
 
@@ -99,7 +114,7 @@ def find_noun(sent):
             if p == 'NN':  # This is a noun
                 noun = w
                 break
-    if noun:
+    if noun and verbose:
         logger.info("Found noun: %s", noun)
 
     return noun
@@ -225,7 +240,8 @@ def respond(sentence):
     if not resp:
         resp = random.choice(NONE_RESPONSES)
 
-    logger.info("Returning phrase '%s'", resp)
+    if verbose:
+        logger.info("Returning phrase '%s'", resp)
     # Check that we're not going to say anything obviously offensive
     filter_response(resp)
 
@@ -243,7 +259,8 @@ def find_candidate_parts_of_speech(parsed):
         noun = find_noun(sent)
         adjective = find_adjective(sent)
         verb = find_verb(sent)
-    logger.info("Pronoun=%s, noun=%s, adjective=%s, verb=%s", pronoun, noun, adjective, verb)
+    if verbose:
+        logger.info("Pronoun=%s, noun=%s, adjective=%s, verb=%s", pronoun, noun, adjective, verb)
     return pronoun, noun, adjective, verb
 
 
@@ -262,11 +279,4 @@ def filter_response(resp):
 # end
 
 if __name__ == '__main__':
-    import sys
-    # Usage:
-    # python broize.py "I am an engineer"
-    if (len(sys.argv) > 0):
-        saying = sys.argv[1]
-    else:
-        saying = "How are you, brobot?"
-    print(broback(saying))
+    main()
