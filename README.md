@@ -23,11 +23,14 @@ Requires Python 2.7 or Python 3
 
 ### Run the command-line interface
 
-You can use the script as a library by calling `broback(sentence)` directly, or
-call it from the command line. Say something custom as an argument to the script,
-or the program will just use a default sentence:
+This script runs an endless loop. You can start it via calling:
 
-`python broize.py "I am an engineer"`
+`python broize.py `
+
+Just type in whatever you prefer and chat with Brobot!
+If you wish to end the chat, just type:
+
+`quit`
 
 Note that this bot is _extremely simple_ as it's been optimized for use
 as a training tool. It's not very interesting by itself!
